@@ -34,33 +34,37 @@ app.get('/users', (request, response) => {
     console.log('Body --->', body);
 
 
-    response.status(200).json({results: users});
+    response.status(200).json({ results: users });
 });
 
 // Adicionar/Criar um novo usuário dentro da nossa lista de users
 app.post('/users', (request, response) => {
+    // Validar se os campos name e username estão vazios
     // Gerar um id aleatório - OK
     // Pegar da requisição o nome e username do usuário - Semi OK
     // Verificar se um usuário com o username informado já existe - OK
     // Criar um novo objeto de usuário - OK
     // Salvo/Insiro esse novo objeto dentro do array users - OK
     // Responder a requisição com o novo usuário criado - OK
-    const newName = 'Henrique Alves';
-    const newUserName = 'henrique-1234';
+    const bodyRequest = request.body;
+
+    if(bodyRequest.name === "" || bodyRequest.username === "") {
+        return response.status(400).json({ message: 'Field name & username are both required' });
+    };
 
 
     const foundUser = users.find((user) => {
-        return user.username === newUserName;
+        return user.username === bodyRequest.username;
     });
 
     if(foundUser) {
-        return response.status(400).json({ message: `User with username ${newUserName} already exists` });
+        return response.status(400).json({ message: `User with username ${bodyRequest.username} already exists` });
     };
 
     const newUser = {
         id: uuid.v4(),
-        name: newName,
-        username: newUserName,
+        name: bodyRequest.name,
+        username: bodyRequest.username,
         tasks: [],
     };
 
