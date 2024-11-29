@@ -2,11 +2,11 @@
 // API RESTFULL
 // GET POST PUT DELETE
 
-// GET    /todo-list       ---> listar TODOs
-// POST   /todo-list       ---> Criar um TODO
-// GET    /todo-list/{id}  ---> Listar UM TODO específico
-// PUT    /todo-list/{id}  ---> Editar um TODO específico
-// DELETE /todo-list/{id}  ---> Deletar um TODO específico
+// GET    /tasks       ---> listar TODOs
+// POST   /tasks       ---> Criar um TODO
+// GET    /tasks/{id}  ---> Listar UM TODO específico
+// PUT    /tasks/{id}  ---> Editar um TODO específico
+// DELETE /tasks/{id}  ---> Deletar um TODO específico
 
 // STATUS CODES
 // 2xx - Success
