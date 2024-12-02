@@ -73,7 +73,6 @@ app.get('/tasks', (request, response) => {
 
     // Com o username que veio dos headers, procurar este user no array de users - OK
     // Se encontratmos o usuário, basta retornar as tasks dele pelo response - OK
-
     const foundUser = users.find((user) => {
         return user.username === headers.username;
     });
@@ -120,7 +119,6 @@ app.get('/tasks/:id', (request, response) => {
     // Pegar o username dos headers e busca-lo no nosso users - OK
     // Pegar o ID da task que veio via params e vamos busca-la dentro do array de tasks do user encontrado - OK
     // Se encontrarmos a task, retorna-la no response - OK
-
     const headers = request.headers;
     const foundUser = users.find((user) => {
         return user.username === headers.username;
@@ -144,17 +142,16 @@ app.get('/tasks/:id', (request, response) => {
 
 app.put('/tasks/:id', (request, response) => {
     // Pegar e validar o user pelo username dos headers - OK
-    // Pegar o task que está dentro do usuario encontrado pelo ID que vieram por params
-    // Se encontrar a task substituir o title e o deadline que vieram no body
-    // Retornar um 200 com a task editada
-
+    // Pegar o task que está dentro do usuario encontrado pelo ID que vieram por params - OK
+    // Se encontrar a task substituir o title e o deadline que vieram no body - OK
+    // Retornar um 200 com a task editada - OK
     const headers = request.headers;
     const foundUser = users.find((user) => {
         return user.username === headers.username;
     });
     // Se NÃO ENCONTRAR o user
     if(!foundUser) {
-        return response.status(400).json({ message: `User wiht username ${headers.username} not found` });
+        return response.status(400).json({ message: `User with username ${headers.username} not found` });
     };
 
     const params = request.params;
@@ -172,5 +169,57 @@ app.put('/tasks/:id', (request, response) => {
     response.status(200).json(foundTask);
 });
 
-app.listen(PORT, () => console.log(`App rodando na porta ${PORT}`));
+app.patch('/tasks/:id', (request, response) => {
+    const headers = request.headers;
+    const foundUser = users.find((user) => {
+        return user.username === headers.username;
+    });
+    // Se NÃO ENCONTRAR o user
+    if(!foundUser) {
+        return response.status(400).json({ message: `User with username ${headers.username} not found` });
+    };
 
+    const params = request.params;
+    const foundTask = foundUser.tasks.find((task) => {
+        return task.id === params.id;
+    });
+    if(!foundTask) {
+        return response.status(400).json({ message: `Task with id ${params.id} not found` })
+    };
+
+    // Invertendo o valor booleano que o campo done possui
+    foundTask.done = !foundTask.done;
+
+    response.status(200).json(foundTask);
+});
+
+app.delete('/tasks/:id', (request, response) => {
+    // Pegar e validar o user pelo username dos headers - OK
+    // Encontrar o indice da task pelo ID informado nos params - OK
+    // Pegar o indice encontrado e dar splice no array de tasks - OK
+    // Retornar um response - OK
+    const headers = request.headers;
+    const foundUser = users.find((user) => {
+        return user.username === headers.username;
+    });
+    // Se NÃO ENCONTRAR o user
+    if(!foundUser) {
+        return response.status(400).json({ message: `User with username ${headers.username}  not found` });
+    };
+
+    const params = request.params;
+    // Retorna o Index da task caso ela seja encontrada
+    // Retorna -1 caso ela não encontre o elemento no array
+    const foundIndex = foundUser.tasks.findIndex((task) => {
+        return task.id === params.id;
+    });
+    if(foundIndex === -1) {
+        return response.status(400).json({ message: `Task with id ${params.id} not found` });
+    };
+
+    foundUser.tasks.splice(foundIndex, 1);
+
+    response.status(204).send();
+});
+
+app.listen(PORT, () => console.log(`App rodando na porta ${PORT}`));

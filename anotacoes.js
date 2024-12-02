@@ -6,6 +6,7 @@
 // POST   /tasks       ---> Criar um TODO
 // GET    /tasks/{id}  ---> Listar UM TODO específico
 // PUT    /tasks/{id}  ---> Editar um TODO específico
+// PATCH  /tasks/{id}  ---> Editar somente UM campo especifico do TODO (campo "done")
 // DELETE /tasks/{id}  ---> Deletar um TODO específico
 
 // STATUS CODES
